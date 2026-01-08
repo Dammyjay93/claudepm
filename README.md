@@ -1,31 +1,53 @@
 # ClaudeMem
 
-**AI-native project management for Claude Code.**
+Every Claude Code session starts with a blank slate. You explain your project, make decisions, write code—then close the session. Tomorrow, Claude has no idea what happened.
 
-No app switching. No manual updates. Claude is the PM.
+ClaudeMem fixes this. It gives Claude persistent memory across sessions.
+
+```
+[New session starts]
+
+Claude: "Resuming your project. Currently on epic 2: 'Core Features'.
+         Task: Set up database auth. Continue where you left off?"
+```
+
+Claude knows what you're building, what you decided, and what's next. No re-explaining.
 
 ---
 
-## The Problem
+## Why not just use a PRD file?
 
-Every Claude Code session starts with amnesia:
+You can drop a PRD.md in your project and Claude will read it. That works for static context. But it doesn't solve:
 
-```
-Session 1: Deep discussion, decisions made, code written
-[Session ends]
-Session 2: "What were we working on?"
-```
+- **What task am I on?** A PRD doesn't track progress
+- **What did I decide yesterday?** Decisions get lost in conversation history
+- **What happened last session?** No automatic session logging
+- **Which project am I working on?** If you juggle multiple projects, Claude doesn't know which one is active
 
-Context disappears. Decisions forgotten. You repeat yourself endlessly.
+ClaudeMem tracks all of this in structured files that Claude reads automatically when you start a session.
 
-## The Solution
+---
 
-ClaudeMem gives Claude Code persistent memory across sessions:
+## Why not just tell Claude what I'm working on?
 
-```
-You: "What was I working on?"
-Claude: "Resuming your project. Task: Set up database. Continue?"
-```
+You can. Every single session. Forever.
+
+Or you can run `/claudemem:status` and Claude already knows.
+
+The difference is automation. ClaudeMem hooks into session start/stop, so Claude loads context without you asking. It tracks task completion so you don't manually update files. It logs sessions so you have a history.
+
+---
+
+## Why not Linear/Notion with MCP?
+
+You can use those MCPs. They work. ClaudeMem is different in a few ways:
+
+- **No setup**: No API keys, no external accounts. Just markdown files.
+- **Conversation → tasks**: Claude generates PRD and tasks from your discussion. You don't create them manually.
+- **Session-first**: Built specifically for "where was I?" not general project management.
+- **Portable**: It's just files in `~/Vault/`. Works offline, easy to backup, readable without any tool.
+
+If you already use Linear and want Claude to interact with it, use the Linear MCP. If you want lightweight session memory without external dependencies, use ClaudeMem.
 
 ---
 
@@ -36,23 +58,30 @@ Claude: "Resuming your project. Task: Set up database. Continue?"
 /claudemem:setup
 ```
 
-Then follow the setup instructions to configure hooks and CLAUDE.md.
+The setup command creates your vault structure and tells you how to configure hooks and CLAUDE.md. Takes 2 minutes.
 
 ---
 
 ## How It Works
 
+ClaudeMem stores everything in `~/Vault/`:
+
 ```
-~/Vault/                        Your workspace memory
-├── _manifest.md                Quick state (loaded every session)
+~/Vault/
+├── _manifest.md                # Active project, current task, recent sessions
 ├── Projects/
 │   └── my-project/
-│       ├── _index.md           Project overview
-│       ├── PRD.md              Requirements
-│       ├── Decisions.md        Architecture decisions
-│       └── Epics/              Tasks by epic
-└── Sessions/                   Session history
+│       ├── _index.md           # Project overview and status
+│       ├── PRD.md              # Requirements (generated from conversation)
+│       ├── Decisions.md        # Architecture decisions with timestamps
+│       └── Epics/
+│           ├── 01-foundation.md
+│           └── 02-features.md  # Tasks as checkboxes with status
+└── Sessions/
+    └── 2026-01-08.md           # What happened today
 ```
+
+When Claude starts a session, it reads `_manifest.md` first. That file points to the active project and task. Claude knows exactly where you are.
 
 ---
 
@@ -60,77 +89,64 @@ Then follow the setup instructions to configure hooks and CLAUDE.md.
 
 | Command | What It Does |
 |---------|--------------|
-| `/claudemem` | Smart dispatcher - reads context, suggests action |
 | `/claudemem:setup` | Initialize vault structure |
-| `/claudemem:status` | Show current project/epic/task |
-| `/claudemem:plan` | Create project from conversation |
-| `/claudemem:start` | Begin working on a task |
-| `/claudemem:done` | Mark current task complete |
-| `/claudemem:save` | Write session notes |
-| `/claudemem:switch` | Change active project |
+| `/claudemem:plan` | Turn current conversation into PRD, epics, and tasks |
+| `/claudemem:start` | Start the next task (or a specific one) |
+| `/claudemem:done` | Mark current task complete, get next suggestion |
+| `/claudemem:save` | Write session notes before you close |
+| `/claudemem:status` | Show active project, current task, blockers |
+| `/claudemem:switch` | Change to a different project |
 
 ---
 
-## The Workflow
+## Workflow
 
-### 1. Plan a Project
+### Planning a project
+
+You have a conversation about what you want to build. Then:
 
 ```
-You: "I want to build an app that does X, Y, Z..."
-
-[Conversation happens]
-
 You: /claudemem:plan
 
 Claude: Creates PRD, epics, tasks from conversation
-        "Created project: 5 epics, 32 tasks. Start?"
+        "Created 'my-project': 4 epics, 23 tasks. Ready to start?"
 ```
 
-### 2. Work on Tasks
+You don't write the PRD. Claude extracts it from what you discussed.
+
+### Working on tasks
 
 ```
 You: /claudemem:start
 
-Claude: Loads context, marks task in-progress
-        "Working on: Set up database schema"
+Claude: "Starting task: Set up database schema"
+        [Loads relevant context from PRD and previous decisions]
 
-[You code]
+[You work on it]
 
 You: /claudemem:done
 
-Claude: Marks complete, suggests next
-        "Done. Next: Implement auth flow. Continue?"
+Claude: "Marked complete. Next up: Implement user auth. Continue?"
 ```
 
-### 3. Resume Next Session
+### Next session
 
 ```
-[New Claude Code session]
+[Open Claude Code tomorrow]
 
-Claude: "Resuming project. Task: Implement auth flow. Continue?"
+Claude: "Resuming my-project. You completed 'Set up database schema' yesterday.
+         Current task: Implement user auth. Ready?"
 ```
 
-No re-explaining. No lost context. Just continue.
+You pick up exactly where you left off.
 
 ---
 
-## Why Not Linear/Jira/Notion?
+## Docs
 
-| Traditional PM | ClaudeMem |
-|----------------|-----------|
-| Manual task creation | Claude generates from conversation |
-| Manual status updates | Claude updates as you work |
-| Context in your head | Context in files Claude reads |
-| Switch apps to check status | Ask Claude, stay in flow |
-| Separate from your code | Integrated into Claude Code |
-
----
-
-## Documentation
-
-- [Commands Reference](docs/COMMANDS.md) - All commands
-- [Setup Guide](docs/SETUP.md) - Manual installation
-- [Future: Obsidian Integration](docs/FUTURE.md) - Visual layer roadmap
+- [Commands Reference](docs/COMMANDS.md) - Detailed command documentation
+- [Setup Guide](docs/SETUP.md) - Manual installation if you prefer
+- [Future: Obsidian](docs/FUTURE.md) - Visual kanban boards (planned)
 
 ---
 
