@@ -1,8 +1,8 @@
 # ClaudeMem
 
-Every Claude Code session starts with a blank slate. You explain your project, make decisions, write code—then close the session. Tomorrow, Claude has no idea what happened.
+Claude Code doesn't track project state between sessions. You can drop files for context, but there's no built-in way to know what task you were on or what you decided yesterday.
 
-ClaudeMem fixes this. It gives Claude persistent memory across sessions.
+ClaudeMem adds that layer.
 
 ```
 [New session starts]
@@ -11,7 +11,7 @@ Claude: "Resuming your project. Currently on epic 2: 'Core Features'.
          Task: Set up database auth. Continue where you left off?"
 ```
 
-Claude knows what you're building, what you decided, and what's next. No re-explaining.
+It automatically loads your project context, tracks tasks, and logs sessions—so you pick up where you left off.
 
 ---
 
