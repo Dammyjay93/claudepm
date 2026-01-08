@@ -53,3 +53,8 @@ milestone: string    # Current milestone name
 2. Folder name must match `id` field
 3. Never create duplicate project folders
 4. `_index.md` is the entry point, always exists
+5. **Current State is source of truth** — Active epic/task live here, not in manifest
+
+## Multi-Session Note
+
+The `Current State` section is where session state lives. When working on this project, update this file — not the manifest. This allows multiple Claude sessions to work on different projects simultaneously without conflict.

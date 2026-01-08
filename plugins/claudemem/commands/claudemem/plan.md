@@ -8,6 +8,8 @@ argument-hint: [project-name]
 
 Create a structured project from the conversation.
 
+**Multi-session safe**: Creates new project files. Other sessions are unaffected.
+
 ## Steps
 
 1. **Analyze Conversation**
@@ -39,6 +41,23 @@ priority: P1
 created: {today}
 brief: {1-2 sentence summary}
 ---
+
+# {Project Name}
+
+## Overview
+{Brief description}
+
+## Current State
+- **Active Epic**: {first epic or "None"}
+- **Active Task**: {first task or "None"}
+- **Blockers**: None
+
+## Epics
+{List of epics}
+
+## Quick Links
+- [PRD](./PRD.md)
+- [Decisions](./Decisions.md)
 ```
 
 ### PRD.md
@@ -91,7 +110,7 @@ Each epic contains tasks as checkboxes.
 
 5. **Update Manifest**
    - Add project to Projects table
-   - Set as active context
+   - Set `Last Touched` → new project (not "Active Context")
    - Update timestamp
 
 6. **Announce Result**
@@ -110,6 +129,16 @@ Total: {n} epics, {m} tasks
 
 Ready to start? First task: {first task}
 ```
+
+## What Gets Created/Updated
+
+| File | Action |
+|------|--------|
+| `Projects/{id}/_index.md` | Created with Current State |
+| `Projects/{id}/PRD.md` | Created |
+| `Projects/{id}/Decisions.md` | Created |
+| `Projects/{id}/Epics/*.md` | Created |
+| `_manifest.md` | Add to Projects table, set Last Touched |
 
 ## Rules
 

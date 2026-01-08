@@ -8,10 +8,14 @@ argument-hint: [action] [target]
 
 You are the memory manager for this workspace. Your job is to maintain context across sessions.
 
+**Multi-session safe**: Multiple Claude sessions can work on different projects simultaneously.
+
 ## First: Read Current State
 
-Read the manifest to understand current state:
-- File: `~/Vault/_manifest.md`
+1. Read the manifest: `~/Vault/_manifest.md`
+   - Check `Last Touched` for project hint (may be stale from another session)
+2. If project exists, read `~/Vault/Projects/{project}/_index.md`
+   - This is the **source of truth** for active epic/task
 
 ## Then: Determine Action
 
@@ -20,7 +24,7 @@ Based on the argument and conversation context:
 ### No argument (`/claudemem`)
 Act as smart dispatcher:
 1. If conversation discussed a new project idea → Offer to plan it
-2. If there's an active task → Show status and offer to continue
+2. If there's an active task in project → Show status and offer to continue
 3. If no context → Show dashboard with recent activity
 
 ### With argument
@@ -68,10 +72,11 @@ Blockers: {blockers or "None"}
 ## Important Rules
 
 1. Always read `~/Vault/_manifest.md` first
-2. Never create duplicate project folders
-3. Update manifest after every state change
-4. Follow schemas in `~/Vault/.schemas/`
-5. Announce what you did clearly
+2. **Get active state from project's `_index.md`**, not manifest
+3. Never create duplicate project folders
+4. **Update project files during work**, only touch manifest on switch/save
+5. Follow schemas in `~/Vault/.schemas/`
+6. Announce what you did clearly
 
 ## Argument Handling
 

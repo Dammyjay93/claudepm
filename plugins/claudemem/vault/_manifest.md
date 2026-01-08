@@ -1,17 +1,14 @@
 ---
 type: manifest
-version: 1
+version: 2
 updated: 2024-01-01T00:00:00Z
 ---
 
 # Workspace
 
-## Active Context
+## Last Touched
 
 project: null
-epic: null
-task: null
-session_started: null
 
 ## Projects
 

@@ -69,10 +69,10 @@ ClaudeMem stores everything in `~/Vault/`:
 
 ```
 ~/Vault/
-├── _manifest.md                # Active project, current task, recent sessions
+├── _manifest.md                # Project registry, recent sessions, last-touched hint
 ├── Projects/
 │   └── my-project/
-│       ├── _index.md           # Project overview and status
+│       ├── _index.md           # Project overview + ACTIVE STATE (epic/task)
 │       ├── PRD.md              # Requirements (generated from conversation)
 │       ├── Decisions.md        # Architecture decisions with timestamps
 │       └── Epics/
@@ -82,7 +82,29 @@ ClaudeMem stores everything in `~/Vault/`:
     └── 2026-01-08.md           # What happened today
 ```
 
-When Claude starts a session, it reads `_manifest.md` first. That file points to the active project and task. Claude knows exactly where you are.
+When Claude starts a session, it reads `_manifest.md` for the project list and a hint about which project you last touched. The actual active task lives in each project's `_index.md`.
+
+---
+
+## Multi-Session Support
+
+You can run multiple Claude sessions on different projects simultaneously.
+
+```
+Terminal A (project: api-backend)     Terminal B (project: mobile-app)
+         │                                     │
+         ▼                                     ▼
+ api-backend/_index.md               mobile-app/_index.md
+   Active Task: Auth API               Active Task: Login screen
+         │                                     │
+         └──────────────┬──────────────────────┘
+                        ▼
+                 _manifest.md
+                   Last Touched: (whoever wrote last)
+                   Projects: [api-backend, mobile-app]
+```
+
+No conflict. Each session writes to its own project file. The manifest's "Last Touched" is just a convenience hint—not authoritative state.
 
 ---
 

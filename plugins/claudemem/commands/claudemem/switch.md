@@ -8,14 +8,16 @@ argument-hint: <project-name>
 
 Switch active context to a different project.
 
+**Multi-session safe**: This only updates your session's context. Other sessions on other projects are unaffected.
+
 ## Steps
 
 1. **Check Current State**
-   - Read `~/Vault/_manifest.md`
-   - If task is in-progress, warn user
+   - Read `~/Vault/_manifest.md` for Last Touched
+   - Read current project's `_index.md` if it exists
 
-2. **Offer to Save**
-   If there's an active session with work:
+2. **Offer to Save** (optional)
+   If there's been significant work in this session:
    ```
    You have work in progress on {current project}.
 
@@ -40,8 +42,8 @@ Switch active context to a different project.
 
 5. **Load New Project**
    - Read `Projects/{id}/_index.md`
-   - Find current/next epic and task
-   - Update manifest Active Context
+   - Get active epic/task from **Current State** section
+   - Update manifest's `Last Touched` only (not Active Context)
 
 6. **Announce**
 
@@ -49,8 +51,8 @@ Switch active context to a different project.
 SWITCHED TO: {Project Name}
 
 Status: {status}
-Current Epic: {epic name}
-Current Task: {task or "None - pick one to start"}
+Current Epic: {epic name from _index.md}
+Current Task: {task from _index.md or "None - pick one to start"}
 
 Progress: {n}/{m} tasks complete
 
@@ -62,14 +64,19 @@ Use /claudemem start {task} to begin.
 ```
 RESUMING: {Project Name}
 
-Last worked: {date}
-Left off at: {task description}
-
-Session notes from last time:
-{Brief from last session}
+Last worked: {date from Recent Sessions}
+Left off at: {task from project's _index.md}
 
 Continue with {task}? (y) or /claudemem status for full overview
 ```
+
+## What Gets Updated
+
+| File | Change |
+|------|--------|
+| `_manifest.md` | `Last Touched` → new project |
+| Old project `_index.md` | Nothing (state preserved) |
+| New project `_index.md` | Nothing (just reading) |
 
 ## Argument
 

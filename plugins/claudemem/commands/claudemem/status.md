@@ -7,17 +7,21 @@ allowed-tools: Read, Glob
 
 Show the current workspace state.
 
+**Multi-session note**: State comes from project files, not manifest. Your session's context is independent of other sessions.
+
 ## Steps
 
 1. Read `~/Vault/_manifest.md`
-2. Parse the Active Context section
-3. If active project exists, read `~/Vault/Projects/{project}/_index.md`
-4. If active epic exists, read the epic file
-5. Display formatted status
+   - Get `Last Touched` project hint
+   - Get list of all projects
+2. If last touched project exists, read `~/Vault/Projects/{project}/_index.md`
+   - Get **Current State** section (active epic/task)
+3. If active epic exists, read the epic file for task details
+4. Display formatted status
 
 ## Output Format
 
-### If Active Context Exists
+### If Project Has Active Context
 
 ```
 PROJECT: {Project Name}
@@ -37,9 +41,6 @@ NEXT UP:
 
 BLOCKERS:
 {List blockers or "None"}
-
-SESSION:
-Started: {time ago}
 ```
 
 ### If No Active Context
@@ -48,10 +49,23 @@ Started: {time ago}
 NO ACTIVE PROJECT
 
 Recent Activity:
-{List recent sessions}
+{List recent sessions from manifest}
 
 Available Projects:
 {List projects with status}
 
-Use /claudemem start {project} to begin.
+Use /claudemem switch {project} to select one.
+```
+
+### Multi-Session Info
+
+If you want to show all projects' states:
+```
+WORKSPACE OVERVIEW
+
+Projects:
+- {project 1}: {active task from its _index.md}
+- {project 2}: {active task from its _index.md}
+
+Last touched: {project from manifest}
 ```
