@@ -6,10 +6,11 @@ In Claude Code:
 
 ```
 /plugin marketplace add Dammyjay93/claudemem
+/plugin install claudemem
 /claudemem:setup
 ```
 
-The setup command creates the vault structure and shows configuration steps.
+The first command adds the marketplace. The second installs the plugin. The third creates your vault structure and shows configuration steps.
 
 ---
 

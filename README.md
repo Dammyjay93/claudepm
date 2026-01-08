@@ -55,10 +55,11 @@ If you already use Linear and want Claude to interact with it, use the Linear MC
 
 ```
 /plugin marketplace add Dammyjay93/claudemem
+/plugin install claudemem
 /claudemem:setup
 ```
 
-The setup command creates your vault structure and tells you how to configure hooks and CLAUDE.md. Takes 2 minutes.
+The first command adds the marketplace. The second installs the plugin. The third creates your vault structure and tells you how to configure hooks and CLAUDE.md.
 
 ---
 
