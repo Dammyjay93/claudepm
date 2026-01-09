@@ -42,8 +42,10 @@ Route to appropriate action:
 ## Output Format
 
 **REQUIRED**:
-1. First, read `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` to get the current version
+1. First, read `~/.claude/plugins/marketplaces/claudemem-marketplace/plugins/claudemem/.claude-plugin/plugin.json` to get the current version
 2. Always start output with `CLAUDEMEM v{version}` header using the version from plugin.json
+
+Note: `${CLAUDE_PLUGIN_ROOT}` doesn't work in markdown commands (known bug). Use the full marketplace path.
 
 ### Dashboard (no active context)
 ```
