@@ -68,7 +68,7 @@ Then run `/claudemem:setup` to create your vault structure.
 /plugin marketplace update claudemem-marketplace
 ```
 
-Changes take effect immediately—no restart needed.
+Restart Claude Code after updating to apply changes.
 
 ---
 
