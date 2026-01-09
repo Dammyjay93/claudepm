@@ -16,7 +16,9 @@ Show the current workspace state.
    - Get list of all projects
 2. If last touched project exists, read `~/Vault/Projects/{project}/_index.md`
    - Get **Current State** section (active epic/task)
-3. If active epic exists, read the epic file for task details
+3. If active epic exists, read `~/Vault/Projects/{project}/Epics/{epic}.md`
+   - Get task details, progress, approach
+   - **NOTE**: Epics are ALWAYS in the `Epics/` subdirectory
 4. Display formatted status
 
 ## Output Format

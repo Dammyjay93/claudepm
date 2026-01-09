@@ -20,7 +20,8 @@ Begin working on a task or switch to a project.
 2. **Find Current Context**
    - Read `~/Vault/_manifest.md` for Last Touched project
    - Read `~/Vault/Projects/{project}/_index.md` for current epic/task
-   - Search epic files for matching task
+   - Search `~/Vault/Projects/{project}/Epics/*.md` for matching task
+   - **NOTE**: Epics are ALWAYS in the `Epics/` subdirectory
 
 3. **Update Task Status**
    - In the epic file, change task from `#pending` to `#in-progress`
@@ -60,8 +61,8 @@ Acceptance criteria:
 
 | File | Change |
 |------|--------|
-| Epic file | Task status → `#in-progress` |
-| Project `_index.md` | Current State → this task |
+| `Projects/{id}/Epics/{epic}.md` | Task status → `#in-progress` |
+| `Projects/{id}/_index.md` | Current State → this task |
 | `_manifest.md` | `Last Touched` → this project |
 
 ## If No Tasks Found

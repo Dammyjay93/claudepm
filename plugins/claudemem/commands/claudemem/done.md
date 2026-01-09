@@ -23,8 +23,8 @@ Mark the current task as complete and suggest next steps.
    Use /claudemem start {task} to begin one.
    ```
 
-3. **Mark Complete in Epic File**
-   - Open the epic file
+3. **Mark Complete in Epic File** (`~/Vault/Projects/{project}/Epics/{epic}.md`)
+   - **NOTE**: Epics are ALWAYS in the `Epics/` subdirectory
    - Change `- [ ]` to `- [x]` for the task
    - Change `#in-progress` to `#done`
    - Add completion date if desired
@@ -66,8 +66,8 @@ Continue? (y) or /claudemem status for overview
 
 | File | Change |
 |------|--------|
-| Epic file | Task → `[x] ... #done` |
-| Project `_index.md` | Current State → next task |
+| `Projects/{id}/Epics/{epic}.md` | Task → `[x] ... #done` |
+| `Projects/{id}/_index.md` | Current State → next task |
 | `_manifest.md` | Nothing (no epic/task stored there) |
 
 ## If Last Task in Project

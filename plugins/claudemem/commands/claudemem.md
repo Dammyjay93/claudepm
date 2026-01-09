@@ -10,6 +10,25 @@ You are the memory manager for this workspace. Your job is to maintain context a
 
 **Multi-session safe**: Multiple Claude sessions can work on different projects simultaneously.
 
+## File Structure Reference
+
+```
+~/Vault/
+├── _manifest.md                          # Project registry, last touched hint
+├── .schemas/                             # File format schemas
+├── Projects/{project}/
+│   ├── _index.md                         # Project state, stances, decisions
+│   ├── PRD.md                            # Requirements
+│   ├── rules.md                          # Enforced constraints
+│   └── Epics/                            # Epic files live HERE
+│       ├── 01-foundation.md
+│       └── 02-features.md
+└── Sessions/
+    └── {YYYY-MM-DD}-{project}.md         # Session notes
+```
+
+**IMPORTANT**: Epic files are ALWAYS in the `Epics/` subdirectory, never directly in the project folder.
+
 ## First: Read Current State
 
 1. Read the manifest: `~/Vault/_manifest.md`
@@ -19,6 +38,8 @@ You are the memory manager for this workspace. Your job is to maintain context a
    - Contains Active Stances (pointers to current rules)
    - Contains Key Decisions (curated top ~10)
 3. Read `~/Vault/Projects/{project}/rules.md` for enforced constraints
+4. If active epic exists, read `~/Vault/Projects/{project}/Epics/{epic}.md`
+   - Contains tasks, approach, and acceptance criteria
 
 ## Then: Determine Action
 
