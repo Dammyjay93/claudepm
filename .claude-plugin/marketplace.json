@@ -1,14 +1,14 @@
 {
   "name": "claudepm-marketplace",
-  "description": "ClaudePM plugin marketplace - Project management for Claude Code",
-  "version": "1.0.0",
+  "description": "ClaudePM - Real project management for Claude Code",
+  "version": "3.1.0",
   "owner": {
     "name": "Damola Akinleye"
   },
   "plugins": [
     {
       "name": "claudepm",
-      "description": "Project manager for Claude Code. Converts conversations into PRDs, epics, and tasks. Tracks progress with bounded decision system.",
+      "description": "Real project management for Claude Code. PRDs, epics, and decisions that persist across sessions.",
       "source": "./plugins/claudepm",
       "category": "productivity"
     }

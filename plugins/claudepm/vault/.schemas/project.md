@@ -8,55 +8,75 @@
 ```yaml
 ---
 type: project
-id: string           # kebab-case, unique (e.g., "recall", "townsquare")
+id: string           # kebab-case, unique (e.g., "my-app")
 name: string         # Human-readable name
-status: string       # active | paused | completed | archived
+status: string       # active | paused | complete
 priority: string     # P0 | P1 | P2
 created: string      # ISO date (YYYY-MM-DD)
+updated: string      # ISO date (YYYY-MM-DD)
+brief: string        # One-line description
+repository: string   # Path to code repository
+stack: array         # Technologies used
 ---
 ```
 
-## Optional Frontmatter
-
-```yaml
-brief: string        # 1-3 sentence description
-repository: string   # Path to code repository
-stack: array         # Technologies used
-target_date: string  # Target completion date
-milestone: string    # Current milestone name
-```
-
-## Required Sections
+## Template
 
 ```markdown
+---
+type: project
+id: {slug}
+name: {Display Name}
+status: active
+priority: P0
+created: {YYYY-MM-DD}
+updated: {YYYY-MM-DD}
+brief: {One-line description}
+repository: {path}
+stack: [{tech}, {tech}]
+---
+
 # {Project Name}
 
 ## Overview
-{Brief description}
+
+{2-3 sentences describing what this is}
 
 ## Current State
+
+- **Phase**: {e.g., "Core built, needs polish"}
 - **Active Epic**: {epic name or "None"}
-- **Active Task**: {task name or "None"}
-- **Last Completed**: {last completed task}
-- **Blockers**: {blocker list or "None"}
+- **Active Task**: {task or "None"}
+- **Blockers**: {description or "None"}
 
 ## Active Stances
 
 | Domain | Stance | Source |
 |--------|--------|--------|
-| {domain} | {current stance} | rules.md §{section} |
+| {area} | {decision} | rules.md |
 
 ## Key Decisions
 
-| Decision | Rationale | Revisit if |
+| Decision | Rationale | Revisit If |
 |----------|-----------|------------|
-| {decision} | {why} | {conditions} |
+| {decision} | {why} | {trigger} |
 
 ## Epics
-<!-- List of epics with progress counts -->
+
+| Epic | Status | Progress | Priority |
+|------|--------|----------|----------|
+| [01-name](./Epics/01-name.md) | in-progress | ~X% | P0 |
+| [02-name](./Epics/02-name.md) | pending | 0% | P1 |
+
+## P0 Blockers
+
+Ship-blocking tasks:
+- [ ] {Task} (Epic: {name})
 
 ## Quick Links
+
 - [PRD](./PRD.md)
+- [Capability Matrix](./capability-matrix.md)
 - [Rules](./rules.md)
 ```
 
@@ -64,32 +84,36 @@ milestone: string    # Current milestone name
 
 1. One project = one folder in `Projects/`
 2. Folder name must match `id` field
-3. Never create duplicate project folders
-4. `_index.md` is the entry point, always exists
-5. **Current State is source of truth** — Active epic/task live here, not in manifest
-6. **Active Stances** — Pointers to current rules, update in place
-7. **Key Decisions** — Curated top ~10 decisions with revisit triggers, not append-only
+3. `_index.md` is the entry point, always exists
+4. **Current State is source of truth** — update here, not manifest
+5. P0 Blockers aggregates ship-blocking tasks from all epics
 
-## Related Files
+## Project Structure
 
-| File | Purpose | Growth Pattern |
-|------|---------|----------------|
-| `rules.md` | Enforced constraints | Update in place |
-| `PRD.md` | Product requirements | Update in place |
-| `Epics/*.md` | Tasks and approach | Lives with epic |
+```
+Projects/{id}/
+├── _index.md              # This file (dashboard)
+├── PRD.md                 # What, why, constraints
+├── capability-matrix.md   # Exhaustive decomposition
+├── rules.md               # Enforced constraints
+└── Epics/
+    ├── 01-{name}.md
+    ├── 02-{name}.md
+    └── ...
+```
 
-## Multi-Session Note
+## Status Meanings
 
-The `Current State` section is where session state lives. When working on this project, update this file — not the manifest. This allows multiple Claude sessions to work on different projects simultaneously without conflict.
+| Status | Meaning |
+|--------|---------|
+| `active` | Currently being worked on |
+| `paused` | On hold, will resume |
+| `complete` | Shipped, in maintenance |
 
-## Decision Routing
+## Update Triggers
 
-Decisions made during work should be routed:
-
-| Decision type | Where it goes |
-|---------------|---------------|
-| Enforced constraint | `rules.md` |
-| Major product decision | Key Decisions table (curated) |
-| Current stance | Active Stances table |
-| Epic-specific | Epic file Approach section |
-| Full context | Session notes |
+Update `_index.md` when:
+- Starting/completing a task
+- Epic status changes
+- Blockers added/resolved
+- Phase changes

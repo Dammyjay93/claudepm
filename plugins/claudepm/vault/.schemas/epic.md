@@ -1,89 +1,116 @@
 # Epic Schema
 
 ## File Location
-`Projects/{project-id}/Epics/{nn}-{epic-name}.md`
+`Projects/{project-id}/Epics/{nn}-{slug}.md`
 
-Example: `Projects/recall/Epics/01-foundation.md`
+Example: `Projects/my-app/Epics/01-foundation.md`
+
+## Purpose
+
+Epics are **derived from the capability matrix**, not invented separately. Each epic groups related capabilities into an implementation unit.
 
 ## Required Frontmatter
 
 ```yaml
 ---
 type: epic
-id: string           # Format: {nn}-{name} (e.g., "01-foundation")
-project: string      # Parent project id
-status: string       # pending | in-progress | completed | blocked
-priority: string     # P0 | P1 | P2
-created: string      # ISO date
+id: {nn}-{slug}       # e.g., "01-foundation"
+project: {project-id}
+status: pending | in-progress | complete
+priority: P0 | P1 | P2
+created: {YYYY-MM-DD}
+updated: {YYYY-MM-DD}  # Optional
 ---
 ```
 
-## Optional Frontmatter
-
-```yaml
-target_date: string  # Target completion date
-milestone: string    # Associated milestone
-blocked_by: array    # Epic IDs this is blocked by
-```
-
-## Required Sections
+## Template
 
 ```markdown
-# {Epic Title}
+---
+type: epic
+id: {nn}-{slug}
+project: {project}
+status: pending
+priority: P0
+created: {YYYY-MM-DD}
+---
+
+# {Epic Name}
 
 ## Description
-{What this epic accomplishes}
 
-## Approach (this epic)
-- {Epic-scoped decision or approach}
-- {Technical choice specific to this work}
+{What this epic accomplishes. 2-3 sentences.}
 
 ## Tasks
 
-- [ ] Task description #pending
-- [ ] Task description #pending
+### {Section Name}
+- [x] {Completed task} #done
+- [ ] {Pending task} #pending #P0
+- [ ] {Pending task} #pending #P1
+  - Acceptance: {criteria from capability matrix}
+  - Edge case: {edge case handling}
+
+### {Section Name}
+- [ ] {Task} #pending #P0
+- [ ] {Task} #pending #P1
 
 ## Acceptance Criteria
-- [ ] {Criterion 1}
-- [ ] {Criterion 2}
+
+- [ ] {High-level criterion}
+- [ ] {High-level criterion}
 ```
-
-## Approach Section
-
-The Approach section captures epic-scoped decisions that:
-- Are specific to this epic's implementation
-- Don't need to be enforced project-wide
-- Will be archived when the epic completes
-
-When an approach becomes a project-wide pattern, promote it to `rules.md`.
 
 ## Task Format
 
 ```markdown
 - [ ] Task description #status #priority
-- [ ] Task description #blocked-by:{task-id}
 - [x] Completed task #done
 ```
 
-### Task Statuses (as tags)
+### Task Tags
+
+**Status**:
 - `#pending` - Not started
 - `#in-progress` - Currently working
-- `#done` - Completed (use [x] checkbox too)
-- `#blocked` - Waiting on something
-- `#deferred` - Postponed
+- `#done` - Completed (use [x] too)
+- `#blocked` - Waiting on dependency
 
-### Task Priorities (as tags)
-- `#P0` - Critical
-- `#P1` - High
-- `#P2` - Normal (default, can omit)
+**Priority**:
+- `#P0` - Ship blocker
+- `#P1` - Important
+- `#P2` - Nice to have
 
-### Task Dependencies
-- `#blocked-by:{task-id}` - This task is blocked by another
-- `#blocks:{task-id}` - This task blocks another
+## Deriving from Capability Matrix
+
+1. **Group capabilities by domain**:
+   - Auth capabilities → Foundation epic
+   - Content CRUD → Content epic
+   - Social capabilities → Social epic
+
+2. **Each capability becomes task(s)**:
+   - Capability X1: Create item → Task "Create item server action"
+   - Include sub-tasks for loading, error, edge cases
+
+3. **States become acceptance criteria**:
+   - "Loading: button disabled, spinner"
+   - "Error: show user-friendly message"
+   - "Edge case: duplicate blocked"
+
+## Epic Naming
+
+| Number | Domain | Example |
+|--------|--------|---------|
+| 01-09 | Core/Foundation | 01-foundation, 02-content |
+| 10-19 | Features | 10-social, 11-search |
+| 20-29 | Platform | 20-extension, 21-mobile |
+| 30-39 | Growth | 30-landing, 31-marketing |
+| 40-49 | Quality | 40-testing, 41-accessibility |
+| 50-59 | Operations | 50-devops, 51-monitoring |
 
 ## Rules
 
-1. Epic filenames start with 2-digit number for ordering (01, 02, etc.)
-2. Tasks are checkboxes within the epic file
-3. Mark [x] when complete, add #done tag
-4. Update epic status when all tasks complete
+1. Epic filenames start with 2-digit number
+2. Epics derived from capability matrix, not invented
+3. Tasks include acceptance criteria from matrix
+4. Mark [x] when complete + add #done
+5. Update epic status when all P0 tasks complete

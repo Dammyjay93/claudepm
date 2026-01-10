@@ -1,11 +1,11 @@
 {
   "name": "claudepm",
-  "description": "Project manager for Claude Code. Converts conversations into PRDs, epics, and tasks. Tracks progress across sessions with bounded decision system (rules, stances, key decisions). Never lose context on what to do next.",
-  "version": "3.0.0",
+  "description": "Real project management for Claude Code. Stop re-explaining context every session. PRDs, epics, and decisions that persist — so Claude always knows the project, the plan, and what's next.",
+  "version": "3.1.0",
   "author": {
     "name": "Damola Akinleye"
   },
   "repository": "https://github.com/Dammyjay93/claudepm",
   "license": "MIT",
-  "keywords": ["project-management", "tasks", "epics", "prd", "decisions", "workflow", "productivity"]
+  "keywords": ["project-management", "capability-matrix", "planning", "tasks", "epics", "prd", "decisions", "workflow", "productivity"]
 }

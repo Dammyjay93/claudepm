@@ -16,6 +16,7 @@ Create a structured project from the conversation.
    - Identify the product/feature being discussed
    - Extract requirements, decisions, and scope
    - Determine technical approach
+   - Identify entities and their capabilities
 
 2. **Generate Project ID**
    - Use argument if provided: `$ARGUMENTS`
@@ -56,8 +57,9 @@ stack: [{technologies}]
 {Brief description}
 
 ## Current State
-- **Active Epic**: {first epic or "None"}
-- **Active Task**: {first task or "None"}
+- **Phase**: Planning
+- **Active Epic**: None
+- **Active Task**: None
 - **Blockers**: None
 
 ## Active Stances
@@ -77,6 +79,7 @@ stack: [{technologies}]
 
 ## Quick Links
 - [PRD](./PRD.md)
+- [Capability Matrix](./capability-matrix.md)
 - [Rules](./rules.md)
 ```
 
@@ -97,14 +100,83 @@ created: {today}
 ## Solution
 {High-level solution}
 
+## Target User
+{Who is this for}
+
 ## Requirements
-{Extracted from conversation}
+
+### P0 (Must Have)
+| Requirement | Notes |
+|-------------|-------|
+| {requirement} | {context} |
+
+### P1 (Should Have)
+| Requirement | Notes |
+|-------------|-------|
+| {requirement} | {context} |
 
 ## Non-Goals
 {What we're explicitly not doing}
 
-## Technical Approach
+## Success Metrics
+| Metric | Target | How to Measure |
+|--------|--------|----------------|
+| {metric} | {target} | {method} |
+
+## Technical Constraints
 {Stack, architecture decisions}
+```
+
+### capability-matrix.md
+```yaml
+---
+type: capability-matrix
+project: {id}
+version: 1
+created: {today}
+---
+
+# Capability Matrix
+
+## Entities
+
+1. {Entity 1} — {brief description}
+2. {Entity 2} — {brief description}
+
+---
+
+## {Entity 1}
+
+### {ID}: {Capability Name}
+
+- **Trigger**: {what initiates this}
+- **Inputs**: {required and optional inputs}
+- **Validation**: {validation rules}
+- **Loading**: {loading state behavior}
+- **Success**: {success state behavior}
+- **Errors**:
+  - {Error 1} → {handling}
+  - {Error 2} → {handling}
+- **Edge Cases**:
+  - {Edge case 1}
+
+---
+
+## User Journeys
+
+### {Journey Name}
+1. {Step 1} ({capability ID})
+2. {Step 2} ({capability ID})
+
+---
+
+## Non-Functional Requirements
+
+### Performance
+- {metric}: {target}
+
+### Security
+- {requirement}
 ```
 
 ### rules.md
@@ -130,16 +202,12 @@ Enforced constraints. Update in place, never append.
 ```
 
 ### Epics
-Create epic files based on logical groupings:
+Create epic files based on capability matrix groupings:
 - `01-{name}.md` - Foundation/setup
 - `02-{name}.md` - Core functionality
 - etc.
 
-Each epic contains:
-- Description
-- Approach section (epic-scoped decisions)
-- Tasks as checkboxes
-- Acceptance criteria
+Each epic is derived from related capabilities in the matrix:
 
 ```yaml
 ---
@@ -154,16 +222,14 @@ created: {today}
 # {Epic Name}
 
 ## Description
-{What this epic accomplishes}
-
-## Approach (this epic)
-- {Epic-scoped decision or approach}
+{What this epic accomplishes — derived from capability matrix}
 
 ## Tasks
-- [ ] {Task} #pending #{priority}
+- [ ] {Task derived from capability} #pending #{priority}
+  - Acceptance: {from capability states}
 
 ## Acceptance Criteria
-- [ ] {Criterion}
+- [ ] {Criterion from capability matrix}
 ```
 
 6. **Update Manifest**
@@ -178,6 +244,11 @@ PROJECT CREATED: {Name}
 
 {Brief}
 
+Documents:
+- PRD.md (requirements)
+- capability-matrix.md (exhaustive decomposition)
+- rules.md (constraints)
+
 Epics:
 1. {Epic 1} ({n} tasks)
 2. {Epic 2} ({n} tasks)
@@ -185,7 +256,7 @@ Epics:
 
 Total: {n} epics, {m} tasks
 
-Ready to start? First task: {first task}
+Next: Review capability-matrix.md for completeness, then start first task.
 ```
 
 ## What Gets Created/Updated
@@ -194,18 +265,20 @@ Ready to start? First task: {first task}
 |------|--------|
 | `Projects/{id}/_index.md` | Created with Active Stances, Key Decisions |
 | `Projects/{id}/PRD.md` | Created |
+| `Projects/{id}/capability-matrix.md` | Created with entities and capabilities |
 | `Projects/{id}/rules.md` | Created with Product/UI/Engineering sections |
-| `Projects/{id}/Epics/*.md` | Created with Approach sections |
+| `Projects/{id}/Epics/*.md` | Created, derived from capability matrix |
 | `_manifest.md` | Add to Projects table, set Last Touched |
 
 ## Rules
 
 - Extract from conversation, don't invent
-- Be specific in task descriptions
-- Include acceptance criteria for epics
+- Identify entities first, then enumerate capabilities
+- Be exhaustive with capability states (trigger, loading, success, errors)
+- Derive epics from capability groupings
+- Include acceptance criteria from capability states
 - Set realistic priorities (not everything is P0)
 - If unclear, ask before creating
-- Populate rules.md with any constraints identified
 - Key Decisions should have revisit triggers
 
 ## Argument

@@ -1,6 +1,6 @@
 <h1 align="center">ClaudePM</h1>
 
-<h4 align="center">Project state management for <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank">Claude Code</a>.</h4>
+<h4 align="center">Project memory and planning for <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank">Claude Code</a>.</h4>
 
 <p align="center">
   <a href="https://github.com/Dammyjay93/claudepm/actions/workflows/validate.yml">
@@ -27,7 +27,7 @@
 </p>
 
 <p align="center">
-  ClaudePM turns your conversations into structured projects by automatically generating PRDs, epics, and tasks from what you discuss. It tracks your progress and captures decisions as you work, making them available to future sessions. This enables Claude to maintain continuity of your project state — knowing your current task, past decisions, and what's next — even after sessions end.
+  ClaudePM turns your conversations into structured projects with exhaustive planning. It generates PRDs, capability matrices, and epics from what you discuss — then tracks your progress and decisions across sessions. This enables Claude to maintain continuity of your project state even after sessions end.
 </p>
 
 ---
@@ -46,6 +46,7 @@ Restart Claude Code. Your project context will load automatically in future sess
 
 ## Key Features
 
+- **Capability Matrix Planning** — Systematically decompose every entity, capability, and state before building. No more discovering missing features mid-implementation
 - **Automatic Project Generation** — Discuss what you want to build, run `/claudepm:plan`, and ClaudePM generates a PRD with organized epics and tasks from your conversation
 - **Session State Persistence** — Claude automatically loads your project context when you start a new session, including current task and recent decisions
 - **Progress Tracking** — Mark tasks complete with `/claudepm:done`, track completion across epics, and always know what's next
@@ -60,11 +61,14 @@ Restart Claude Code. Your project context will load automatically in future sess
 
 **Workflow:**
 
-1. **Plan** — Discuss your project with Claude, then run `/claudepm:plan` to generate structure
-2. **Work** — Start tasks with `/claudepm:start`, Claude loads relevant context automatically
-3. **Track** — Mark tasks complete with `/claudepm:done`, progress updates across files
-4. **Save** — Run `/claudepm:save` to log what happened before ending your session
-5. **Resume** — Next session, Claude loads your project state and picks up where you left off
+1. **Discuss** — Talk through your project with Claude
+2. **Plan** — Run `/claudepm:plan` to generate PRD and project structure
+3. **Decompose** — Build a capability matrix covering every entity, action, and edge case
+4. **Derive** — Generate epics and tasks from the matrix (nothing invented, everything traced)
+5. **Work** — Start tasks with `/claudepm:start`, Claude loads relevant context automatically
+6. **Track** — Mark tasks complete with `/claudepm:done`, progress updates across files
+7. **Save** — Run `/claudepm:save` to log what happened before ending your session
+8. **Resume** — Next session, Claude loads your project state and picks up where you left off
 
 **Architecture:**
 
@@ -75,20 +79,30 @@ Restart Claude Code. Your project context will load automatically in future sess
 │   └── my-app/
 │       ├── _index.md         # Current epic, task, key decisions
 │       ├── PRD.md            # Generated requirements
+│       ├── capability-matrix.md  # Exhaustive decomposition
 │       ├── rules.md          # Captured constraints
 │       └── Epics/
-│           └── 01-foundation.md  # Tasks + approach notes
+│           └── 01-foundation.md  # Tasks derived from matrix
 └── Sessions/
     └── 2026-01-08.md         # Session log
 ```
 
+**Planning Documents:**
+
+| Document | Purpose | When to Update |
+|----------|---------|----------------|
+| `PRD.md` | What and why (high-level) | After major scope changes |
+| `capability-matrix.md` | Every capability, state, edge case | Complete before building |
+| `rules.md` | Enforced constraints | Update in place as decisions are made |
+
 **Components:**
 
 1. **Manifest Registry** — `_manifest.md` tracks all projects and hints at which was last touched
-2. **Project Index** — Each project's `_index.md` holds current state, active stances, and key decisions
-3. **Epic Files** — Tasks organized by epic with status tracking and approach notes
-4. **Session Logs** — Daily files capturing what happened for audit and context
-5. **Smart Dispatcher** — `/claudepm` reads context and determines what action you need
+2. **Capability Matrix** — Exhaustive decomposition: Entity → Capabilities → States → Edge Cases
+3. **Project Index** — Each project's `_index.md` holds current state, active stances, and key decisions
+4. **Epic Files** — Tasks derived from capability matrix with acceptance criteria
+5. **Session Logs** — Daily files capturing what happened for audit and context
+6. **Smart Dispatcher** — `/claudepm` reads context and determines what action you need
 
 ---
 
@@ -111,15 +125,16 @@ Restart Claude Code. Your project context will load automatically in future sess
 
 | | ClaudePM | Linear/Notion MCP |
 |-|----------|-------------------|
-| **Purpose** | Project state tracking for Claude Code | Integration with external tools |
+| **Purpose** | Project memory and planning for Claude Code | Integration with external tools |
 | **Setup** | No API keys required | API keys required |
+| **Planning** | Capability matrix + derived epics | Manual task creation |
 | **Task Creation** | Generated from conversation | Created manually in external tool |
 | **Progress Tracking** | Built-in epics and task completion | Via external tool |
 | **Decision Capture** | Structured in rules.md and _index.md | Varies by tool |
 | **Storage** | Local markdown in ~/Vault/ | External service |
 | **Offline Support** | Yes | No |
 
-**ClaudePM** — Lightweight project continuity built for Claude Code. Generates structure from conversations, tracks progress across sessions, no external dependencies.
+**ClaudePM** — Lightweight project memory built for Claude Code. Systematic planning with capability matrices, session persistence, no external dependencies.
 
 **Linear/Notion MCP** — Integration layer for existing project management tools. Use if you already manage projects in Linear or Notion and want Claude to read/write to them.
 
@@ -127,6 +142,7 @@ Restart Claude Code. Your project context will load automatically in future sess
 
 ## Documentation
 
+- **[Planning Methodology](docs/PLANNING.md)** — The capability matrix approach in detail
 - **[Commands Reference](docs/COMMANDS.md)** — Detailed command documentation and usage examples
 - **[Setup Guide](docs/SETUP.md)** — Installation, configuration, and troubleshooting
 - **[Future: Obsidian](docs/FUTURE.md)** — Planned visual integration with Obsidian
