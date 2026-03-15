@@ -1,7 +1,5 @@
 # Contributing to ClaudePM
 
-Thanks for your interest in contributing to ClaudePM.
-
 ## Development Setup
 
 1. Clone the repository:
@@ -12,7 +10,7 @@ Thanks for your interest in contributing to ClaudePM.
 
 2. Install in Claude Code for testing:
    ```
-   /plugin marketplace add Dammyjay93/claudepm
+   /plugin marketplace add ./
    /plugin install claudepm
    ```
 
@@ -21,49 +19,52 @@ Thanks for your interest in contributing to ClaudePM.
 ```
 claudepm-marketplace/
 ├── .claude-plugin/
-│   └── marketplace.json      # Marketplace configuration
+│   └── marketplace.json        # Marketplace configuration
 ├── plugins/
 │   └── claudepm/
 │       ├── .claude-plugin/
-│       │   └── plugin.json   # Plugin metadata
-│       └── commands/         # Slash commands
-│           ├── claudepm.md   # Main dispatcher
-│           └── claudepm/     # Subcommands
-│               ├── plan.md
-│               ├── start.md
-│               ├── done.md
-│               ├── save.md
-│               ├── status.md
-│               ├── switch.md
-│               └── setup.md
-├── docs/                     # Documentation
+│       │   └── plugin.json     # Plugin metadata
+│       ├── commands/           # Slash commands
+│       │   ├── claudepm.md     # Main dispatcher
+│       │   └── claudepm/       # Subcommands
+│       │       ├── save.md
+│       │       ├── plan.md
+│       │       ├── review.md
+│       │       ├── handoff.md
+│       │       └── help.md
+│       ├── skills/
+│       │   └── claudepm/
+│       │       └── SKILL.md    # Core knowledge base
+│       ├── hooks/
+│       │   ├── hooks.json
+│       │   ├── session-start-memory.sh
+│       │   ├── session-stop-reminder.sh
+│       │   └── validate-vault.py
+│       └── vault/
+│           └── .schemas/       # File format schemas
 ├── CHANGELOG.md
 └── README.md
 ```
 
-## Making Changes
+## How Commands Work
 
-### Commands
+Commands are markdown files that Claude interprets as prompts. Each command has YAML frontmatter that specifies allowed tools and a description.
 
-Commands are markdown files that Claude interprets. Each command file should:
+The main dispatcher (`claudepm.md`) routes to subcommands based on the argument. Subcommands are in the `claudepm/` directory.
 
-- Have a clear purpose
-- Include explicit file paths (never relative)
-- Reference the File Structure in main claudepm.md
-
-### Testing
+## Testing
 
 1. Make your changes
-2. Update the marketplace: `/plugin marketplace update claudepm-marketplace`
-3. Reinstall the plugin: `/plugin install claudepm`
-4. Test the affected commands
+2. Restart Claude Code to pick up command changes
+3. Test the affected commands
+4. Hooks are picked up automatically from `hooks/hooks.json`
 
-### Versioning
+## Versioning
 
 We follow [Semantic Versioning](https://semver.org/):
 
-- **MAJOR**: Breaking changes (command renames, behavior changes)
-- **MINOR**: New features (new commands, new options)
+- **MAJOR**: Breaking changes to command behavior or vault format
+- **MINOR**: New features, new commands
 - **PATCH**: Bug fixes
 
 Update `CHANGELOG.md` with your changes.
@@ -71,33 +72,13 @@ Update `CHANGELOG.md` with your changes.
 ## Pull Requests
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
+2. Create a feature branch
 3. Make your changes
 4. Update CHANGELOG.md
 5. Submit a pull request
 
-### PR Guidelines
+Keep changes focused. Update documentation if behavior changes. Add a changelog entry.
 
-- Keep changes focused and atomic
-- Update documentation if needed
-- Add changelog entry under `[Unreleased]`
+## Reporting Issues
 
-## Reporting Bugs
-
-Use the [bug report template](.github/ISSUE_TEMPLATE/bug_report.md) and include:
-
-- Steps to reproduce
-- Expected vs actual behavior
-- Your environment (Claude Code version, OS)
-
-## Feature Requests
-
-Use the [feature request template](.github/ISSUE_TEMPLATE/feature_request.md) and describe:
-
-- The problem you're solving
-- Your proposed solution
-- Alternative approaches considered
-
-## Questions?
-
-Open a [discussion](https://github.com/Dammyjay93/claudepm/discussions) or reach out to [@Dammyjay93](https://github.com/Dammyjay93).
+Use GitHub Issues. Include steps to reproduce, expected vs actual behavior, and your environment.

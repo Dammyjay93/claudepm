@@ -1,42 +1,57 @@
 # Manifest Schema
 
 ## File Location
-`_manifest.md` (root of Vault)
+`manifest.md` (root of vault)
 
 ## Purpose
 
-Central registry for projects. Does NOT track session state — that lives in each project's `_index.md`.
+Central registry for projects and configuration. Does NOT track session state — that lives in each project's `_index.md`.
 
 ## Required Frontmatter
 
 ```yaml
 ---
 type: manifest
-version: 3
-updated: string  # ISO timestamp
+version: 4
+tracker: local | linear | github | external
+updated: string  # ISO date
 ---
 ```
 
 ## Template
 
 ```markdown
+---
+type: manifest
+version: 4
+tracker: local
+updated: {YYYY-MM-DD}
+---
+
 # Workspace
 
-## Last Touched
+## Active Context
 
-project: {project-id}   # Advisory hint for session start
+project: {project-id}
+epic: {epic-id or null}
+task: {task description or null}
 
 ## Projects
 
 | id | name | status | priority | last_active | path |
 |----|------|--------|----------|-------------|------|
-| {id} | {name} | active | P0 | {date} | Projects/{id} |
+| {id} | {name} | active | P0 | {date} | projects/{id} |
+
+## Recent Sessions
+
+| date | project | summary |
+|------|---------|---------|
+| {date} | {project} | {brief} |
 
 ## Blockers
 
 | id | description | blocking | created | resolved |
 |----|-------------|----------|---------|----------|
-<!-- Cross-project blockers only -->
 
 ## Quick Stats
 
@@ -44,25 +59,20 @@ project: {project-id}   # Advisory hint for session start
 - Active projects: {n}
 ```
 
-## Project Entry
-
-Each project row links to:
-```
-Projects/{id}/
-├── _index.md              # Dashboard
-├── PRD.md                 # What/why
-├── capability-matrix.md   # Exhaustive decomposition
-├── rules.md               # Constraints
-└── Epics/                 # Implementation plan
-```
-
 ## Rules
 
 1. **No active session state** — Epic/task lives in project's `_index.md`
-2. **Last Touched is advisory** — Hint for session start, may be stale
-3. **Update Last Touched** on session start or `/claudepm switch`
-4. **Update last_active** when saving session
-5. **Session history** lives in `Sessions/`, not manifest
+2. **Active Context is advisory** — Hint for session start, verified against `_index.md`
+3. **Update last_active** when saving session
+4. **Recent Sessions** capped at 15 entries — older entries live in session files only
+5. **Tracker mode** applies to all projects — set once during setup
+
+## Version Migration
+
+When loading a manifest, check the `version` field:
+
+- **version: 3 → 4**: Add `tracker: local` to frontmatter if missing. Rename `Last Touched` section to `Active Context`. Add `Recent Sessions` section if missing.
+- **Missing version**: Treat as version 3, migrate to 4.
 
 ## Multi-Session Behavior
 

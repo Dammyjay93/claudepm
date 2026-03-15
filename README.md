@@ -1,176 +1,93 @@
-<h1 align="center">ClaudePM</h1>
+# ClaudePM
 
-<h4 align="center">Project memory and planning for <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank">Claude Code</a>.</h4>
+ClaudePM is a Claude Code plugin that saves your project context between sessions. When you start a new session, it loads what you were working on, what decisions you made, what tasks are open, and where you left off.
 
-<p align="center">
-  <a href="https://github.com/Dammyjay93/claudepm/actions/workflows/validate.yml">
-    <img src="https://github.com/Dammyjay93/claudepm/actions/workflows/validate.yml/badge.svg" alt="Validate">
-  </a>
-  <a href="https://github.com/Dammyjay93/claudepm/releases">
-    <img src="https://img.shields.io/github/v/release/Dammyjay93/claudepm" alt="Release">
-  </a>
-  <a href="LICENSE">
-    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
-  </a>
-  <a href="https://github.com/sponsors/Dammyjay93">
-    <img src="https://img.shields.io/github/sponsors/Dammyjay93" alt="Sponsors">
-  </a>
-</p>
+Without it, every new Claude Code session starts blank. You have to re-explain your project, your decisions, and your progress before you can get back to work. This gets worse the longer a project runs. ClaudePM solves that by saving structured session notes, project state, and decisions to markdown files that get loaded automatically when you start working.
 
-<p align="center">
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#key-features">Key Features</a> •
-  <a href="#how-it-works">How It Works</a> •
-  <a href="#commands">Commands</a> •
-  <a href="#comparison">Comparison</a> •
-  <a href="#documentation">Documentation</a>
-</p>
+## Install
 
-<p align="center">
-  ClaudePM turns your conversations into structured projects with exhaustive planning. It generates PRDs, capability matrices, and epics from what you discuss — then tracks your progress and decisions across sessions. This enables Claude to maintain continuity of your project state even after sessions end.
-</p>
+```
+/plugin marketplace add Dammyjay93/claudepm
+/plugin install claudepm@Dammyjay93-claudepm
+```
 
----
+Run `/claudepm` to set up. It asks three things: where to store files, how you track tasks, and what project you're working on. Takes about a minute.
 
-## Quick Start
+## How it works
 
-\`\`\`
-/plugin marketplace add Dammyjay93/oakinleye
-/plugin install claudepm
-/claudepm:setup
-\`\`\`
+At the end of a session, you run `/claudepm save`. It writes a detailed session file covering what was built, what was decided, what tasks changed, and what comes next. It also updates your project's state file, syncs your task tracker, and commits to git.
 
-Restart Claude Code. Your project context will load automatically in future sessions.
+At the start of the next session, a hook reads your project files and loads the context into Claude automatically. Claude knows the project, the current task, recent decisions, and open work without you having to explain anything.
 
----
+Everything is stored as markdown files in a directory called the vault (default: `~/.claudepm/`). There's no database or external service involved.
 
-## Key Features
+## What it stores
 
-- **Capability Matrix Planning** — Systematically decompose every entity, capability, and state before building. No more discovering missing features mid-implementation
-- **Automatic Project Generation** — Discuss what you want to build, run \`/claudepm:plan\`, and ClaudePM generates a PRD with organized epics and tasks from your conversation
-- **Session State Persistence** — Claude automatically loads your project context when you start a new session, including current task and recent decisions
-- **Progress Tracking** — Mark tasks complete with \`/claudepm:done\`, track completion across epics, and always know what's next
-- **Decision Capture** — Technical choices and constraints are stored in structured files (\`rules.md\`, \`_index.md\`) and loaded with your project
-- **Multi-Project Support** — Maintain multiple projects simultaneously, each with its own state, and switch between them with \`/claudepm:switch\`
-- **Session History** — Every session is logged with summaries, decisions made, and tasks completed for future reference
-- **Local & Portable** — All data lives in \`~/Vault/\` as plain markdown files. No API keys, no external services, works offline
-
----
-
-## How It Works
-
-**Workflow:**
-
-1. **Discuss** — Talk through your project with Claude
-2. **Plan** — Run \`/claudepm:plan\` to generate PRD and project structure
-3. **Decompose** — Build a capability matrix covering every entity, action, and edge case
-4. **Derive** — Generate epics and tasks from the matrix (nothing invented, everything traced)
-5. **Work** — Start tasks with \`/claudepm:start\`, Claude loads relevant context automatically
-6. **Track** — Mark tasks complete with \`/claudepm:done\`, progress updates across files
-7. **Save** — Run \`/claudepm:save\` to log what happened before ending your session
-8. **Resume** — Next session, Claude loads your project state and picks up where you left off
-
-**Architecture:**
-
-\`\`\`
-~/Vault/
-├── _manifest.md              # Project registry + last-touched state
-├── Projects/
+```
+~/.claudepm/
+├── manifest.md           # Project list and active project
+├── projects/
 │   └── my-app/
-│       ├── _index.md         # Current epic, task, key decisions
-│       ├── PRD.md            # Generated requirements
-│       ├── capability-matrix.md  # Exhaustive decomposition
-│       ├── rules.md          # Captured constraints
-│       └── Epics/
-│           └── 01-foundation.md  # Tasks derived from matrix
-└── Sessions/
-    └── 2026-01-08.md         # Session log
-\`\`\`
+│       ├── _index.md     # Project state, decisions, tasks
+│       ├── PRD.md        # Problem, solution, requirements
+│       ├── rules.md      # Project constraints
+│       └── specs/        # Feature specifications
+└── sessions/
+    └── 2026-03-15-my-app.md
+```
 
-**Planning Documents:**
+Each project has its own folder with a state file (`_index.md`), a requirements doc, a rules file, and folders for specs and epics. Sessions are stored separately with dates and project names.
 
-| Document | Purpose | When to Update |
-|----------|---------|----------------|
-| \`PRD.md\` | What and why (high-level) | After major scope changes |
-| \`capability-matrix.md\` | Every capability, state, edge case | Complete before building |
-| \`rules.md\` | Enforced constraints | Update in place as decisions are made |
+All files are plain markdown. If you stop using ClaudePM, the files are still there and still readable.
 
-**Components:**
+## Features
 
-1. **Manifest Registry** — \`_manifest.md\` tracks all projects and hints at which was last touched
-2. **Capability Matrix** — Exhaustive decomposition: Entity → Capabilities → States → Edge Cases
-3. **Project Index** — Each project's \`_index.md\` holds current state, active stances, and key decisions
-4. **Epic Files** — Tasks derived from capability matrix with acceptance criteria
-5. **Session Logs** — Daily files capturing what happened for audit and context
-6. **Smart Dispatcher** — \`/claudepm\` reads context and determines what action you need
+**Session memory.** Every session gets saved with what happened, what was decided, and what's next. The next session loads this context automatically.
 
----
+**Decision tracking.** Decisions are saved to specific files based on their type. Project constraints go in `rules.md`, major product decisions go in `_index.md`, feature decisions go in the relevant spec file. This makes decisions easy to find later.
+
+**Feature planning.** The `/claudepm plan` command walks you through writing a feature spec by asking structured questions about scope, user journeys, edge cases, data design, and build order. It asks specific questions and doesn't accept vague answers.
+
+**Bug audit gate.** Before fixing a bug, ClaudePM prompts you to verify that the code is actually reachable, that users are affected, and that the fix applies to the right platform. This prevents wasted work on dead code or irrelevant issues.
+
+**Task tracking.** Works with whatever you use. Local markdown tables (default, no setup), Linear (via MCP), GitHub Issues (via `gh` CLI), or any external tool (it reminds you to update manually).
+
+**Cross-tool handoff.** The `/claudepm handoff` command writes a file with full project context so you can continue work in Cursor, Codex, or another tool without losing what was done.
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| \`/claudepm\` | Smart dispatcher — reads context and suggests appropriate action |
-| \`/claudepm:setup\` | Initialize vault structure at \`~/Vault/\` |
-| \`/claudepm:plan\` | Generate PRD, epics, and tasks from current conversation |
-| \`/claudepm:start\` | Begin working on next task, loads relevant context |
-| \`/claudepm:done\` | Mark current task complete, updates progress, suggests next |
-| \`/claudepm:save\` | Write session notes with summary and decisions |
-| \`/claudepm:status\` | Display current project, epic, task, and blockers |
-| \`/claudepm:switch\` | Change to a different project |
+| `/claudepm` | Show project status and load context |
+| `/claudepm save` | Save session notes, update tracker, commit |
+| `/claudepm plan` | Create a new project or feature spec |
+| `/claudepm review` | Check a spec for gaps before building |
+| `/claudepm handoff` | Create a handoff file for another AI tool |
+| `/claudepm archive` | Archive old sessions or projects |
+| `/claudepm help` | Explain commands and concepts |
 
----
+## How it fits with CLAUDE.md and MEMORY.md
 
-## Comparison
+Claude Code already has `CLAUDE.md` for project-level instructions and `MEMORY.md` for user-level preferences. ClaudePM does not replace either of them.
 
-| | ClaudePM | Linear/Notion MCP |
-|-|----------|-------------------|
-| **Purpose** | Project memory and planning for Claude Code | Integration with external tools |
-| **Setup** | No API keys required | API keys required |
-| **Planning** | Capability matrix + derived epics | Manual task creation |
-| **Task Creation** | Generated from conversation | Created manually in external tool |
-| **Progress Tracking** | Built-in epics and task completion | Via external tool |
-| **Decision Capture** | Structured in rules.md and _index.md | Varies by tool |
-| **Storage** | Local markdown in ~/Vault/ | External service |
-| **Offline Support** | Yes | No |
+`CLAUDE.md` stores static rules you write yourself, like coding conventions or file structure guidelines. `MEMORY.md` stores things Claude learns about you across projects, like your experience level or communication preferences. ClaudePM stores project-specific state that changes every session: what was built, what was decided, what tasks are open.
 
-**ClaudePM** — Lightweight project memory built for Claude Code. Systematic planning with capability matrices, session persistence, no external dependencies.
+All three are complementary.
 
-**Linear/Notion MCP** — Integration layer for existing project management tools. Use if you already manage projects in Linear or Notion and want Claude to read/write to them.
+## Using an existing vault
 
----
+If you already have a vault directory from a previous version or from Obsidian, set this environment variable:
 
-## Documentation
+```bash
+export CLAUDEPM_VAULT=~/Vault
+```
 
-- **[Planning Methodology](docs/PLANNING.md)** — The capability matrix approach in detail
-- **[Commands Reference](docs/COMMANDS.md)** — Detailed command documentation and usage examples
-- **[Setup Guide](docs/SETUP.md)** — Installation, configuration, and troubleshooting
-- **[Future: Obsidian](docs/FUTURE.md)** — Planned visual integration with Obsidian
-- **[Changelog](CHANGELOG.md)** — Version history and release notes
-- **[Contributing](CONTRIBUTING.md)** — Development setup and contribution guidelines
+ClaudePM will use that directory. No migration is needed.
 
----
+## Privacy
 
-## Updating
-
-\`\`\`
-/plugin marketplace update oakinleye
-\`\`\`
-
-Restart Claude Code after updating.
-
----
-
-## Related
-
-Part of the [oakinleye](https://github.com/Dammyjay93/oakinleye) plugin collection.
-
-See also: [design-engineer](https://github.com/Dammyjay93/design-engineer) — Design engineering for Claude Code.
-
----
+The vault contains project decisions, architecture notes, and session summaries. It does not contain code or credentials. Still, the content is project-specific and should be treated as private. Don't push it to a public repository.
 
 ## License
 
-This project is licensed under the **MIT License**.
-
-See the [LICENSE](LICENSE) file for details.
+MIT

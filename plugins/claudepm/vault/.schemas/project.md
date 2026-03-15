@@ -15,7 +15,7 @@ priority: string     # P0 | P1 | P2
 created: string      # ISO date (YYYY-MM-DD)
 updated: string      # ISO date (YYYY-MM-DD)
 brief: string        # One-line description
-repository: string   # Path to code repository
+repository: string   # Absolute path to code repository (used for auto-detection)
 stack: array         # Technologies used
 ---
 ```
@@ -82,11 +82,12 @@ Ship-blocking tasks:
 
 ## Rules
 
-1. One project = one folder in `Projects/`
+1. One project = one folder in `projects/`
 2. Folder name must match `id` field
 3. `_index.md` is the entry point, always exists
 4. **Current State is source of truth** — update here, not manifest
-5. P0 Blockers aggregates ship-blocking tasks from all epics
+5. **Repository field must be absolute path** — used by SessionStart hook to auto-detect which project matches the current working directory
+6. P0 Blockers aggregates ship-blocking tasks from all epics
 
 ## Project Structure
 

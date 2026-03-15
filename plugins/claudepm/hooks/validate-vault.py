@@ -14,7 +14,7 @@ import os
 import re
 from pathlib import Path
 
-VAULT_PATH = Path.home() / "Vault"
+VAULT_PATH = Path(os.environ.get("CLAUDEPM_VAULT", str(Path.home() / ".claudepm")))
 
 def parse_frontmatter(content):
     """Extract YAML frontmatter from markdown content."""

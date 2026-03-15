@@ -1,11 +1,11 @@
 {
   "name": "claudepm",
-  "description": "Real project management for Claude Code. Stop re-explaining context every session. PRDs, epics, and decisions that persist — so Claude always knows the project, the plan, and what's next.",
-  "version": "3.1.0",
+  "description": "Session memory and spec discipline for Claude Code. Your projects remember what you decided, what you built, and what's next.",
+  "version": "4.0.0",
   "author": {
     "name": "Damola Akinleye"
   },
   "repository": "https://github.com/Dammyjay93/claudepm",
   "license": "MIT",
-  "keywords": ["project-management", "capability-matrix", "planning", "tasks", "epics", "prd", "decisions", "workflow", "productivity"]
+  "keywords": ["session-memory", "project-management", "spec-first", "planning", "decisions", "workflow", "productivity", "context-persistence"]
 }
