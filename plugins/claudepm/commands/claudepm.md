@@ -264,6 +264,9 @@ Update the tracker **immediately** as you work, not just at save. Context crashe
 - **github**: Run `gh issue edit` to update labels
 - **external**: Note it for end-of-session reminder
 
+### When starting a bug fix:
+Before editing source code, complete the audit gate (see SKILL.md): Bug, Execution Path, User Symptom, Platform. Then write a "Why This Matters" summary in plain language and update the tracker description with both the gate and the summary.
+
 ### When finishing a task:
 1. Git commit with task ID (e.g., `fix: scope DynamoDB permissions (OUT-44)`)
 2. Update tracker: mark task as Done immediately

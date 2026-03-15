@@ -121,6 +121,8 @@ Before editing source code to fix a bug, output these four fields:
 
 **Pattern is not impact.** "This code is wrong" (pattern) is not the same as "this breaks X for users" (impact). Make impact claims only with a proven execution path.
 
+**Why This Matters.** After filling the four fields, write a plain-language summary of why this issue matters. Not technical jargon — what the user experiences and why fixing it is worth the time. This goes in the tracker description (Linear issue, GitHub issue, or local task notes) so anyone reading it understands the impact without parsing the audit. Write this during the audit, after reading the code — not before, and not from assumptions.
+
 After completing the audit gate, write a marker file so the gate survives context compaction:
 
 ```bash
@@ -135,7 +137,7 @@ The save command cleans up `.claudepm/.audit-gates` at session end.
 Every issue follows: **Audit -> Gate -> Code -> Test -> Run -> Mutate -> Commit**
 
 1. **Audit** — Read every file the issue touches. Map dependencies, callers, blast radius.
-2. **Gate** — Output the 4-field structured audit gate. Check stop conditions.
+2. **Gate** — Output the 4-field structured audit gate. Check stop conditions. Write the "Why This Matters" summary and update the tracker description.
 3. **Code** — Write the implementation. Stay focused on issue scope.
 4. **Test** — Launch a subagent with only the issue spec + test helpers. Subagent writes tests without reading implementation.
 5. **Run** — All tests must pass. Fix code, not tests.
